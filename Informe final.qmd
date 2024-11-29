@@ -1,0 +1,82 @@
+---
+title: "Experimento del tiempo de la descargas de aplicaciones en diferenetes dispositivos moviles"
+author: "Manuela Vargas Madrid, Silvana Rojas Osorio"
+lang: es
+theme: sketchy
+format: 
+  html:
+    toc: true 
+    toc-location: left
+    number-sections: true
+editor: visual
+echo: FALSE
+---
+
+# Introducción
+
+El uso de los dispositivos móviles últimamente se ha convertido en algo esencial para las personas, por lo que la eficiencia en estos esa muy importante, siempre se busca que los dispositivos sean rápidos.
+
+En este informe se pretende analizar los tiempos de descargas de diferentes tipos de aplicaciones móviles en dispositivos móviles diferentes, cual es más eficiente en la descarga teniendo en cuenta el peso de la aplicación, y en las mismas condiciones como lo son la red wifi a la que estaba conectada, asegurando que no hubieran aplicaciones en segundo plano generando algún tipo de interferencia en la descarga, sin embargo también hay factores como la antigüedad del celular que no se pudieron controlar en este experimento que pudieron interferir en el resultado, a pesar de esto se pretende dar el mejor análisis. Este análisis permite identificar cual es más eficiente y proponer opciones de mejoras para los otros dispositivos.
+
+# Objetivos
+
+-   Identifica que dispositivo móvil ofrece mejor desempeño y eficiencia en el tiempo de descarga de aplicaciones de diferentes tamaños.
+
+-   Conocer los factores que hacen eficiente a un dispositivo móvil en cuanto al rendimiento del sistema de descargas de aplicaciones.
+
+-   Analizar la variabilidad en los tiempos de descarga y establecer controles para mantener la calidad del proceso.
+
+# Análisis
+
+```{r}
+library(readxl)
+Datos <- read_excel("C:/Users/manuv/Desktop/Universidad/Diseno de experimentos analisis de regresion/Experimento/Regresión.xlsx")
+
+```
+
+## Análisis Gráfico
+
+```{r}
+Datos$Dispositivos <- as.factor(Datos$Dispositivos)
+Datos$`Tiempo descarga`<-as.numeric(Datos$`Tiempo descarga`)
+```
+
+### Análisis 
+
+En la figura 1 se logran realizar observaciones tales como, la mediana de los dispositivos APPLE(Iphone 11) y XIAOMI(Redmi Note 13) es muy cercana al cuantil más bajo o a sus valores más pequeños, lo que quiere decir que su tiempo de descarga se mantiene mínimo, además se observa que los cuantiles del dispositivo XIAOMI(Redmi Note 13) son más pequeños, mientras que los de SAMSUNG(A70) son mucho más grandes, además, la mediana de este supera por mucho la de los otros 2 dispositivos, haciendo referencia a que no es tan viable usar este tipo de móvil para la descarga de APP.
+
+```{r}
+#| label: fig-1
+#| fig-cap: "Tiempo promedio de descarga"
+boxplot(`Tiempo descarga` ~ Dispositivos, data = Datos)
+```
+
+### Análisis 
+
+Es posible ver por medio de la figura 2 la comparación de los tiempos de descarga promedio de las aplicaciones en cada uno de los dispositivos probados y a partir de esto afirmar que el dispositivo SAMSUNG(A70) tiene un menor rendimiento en comparación a los otros 2 y que aunque la diferencia entre APPLE(Iphone 11) y XIAOMI(Redmi Note 13), se puede observar que este último tiene un mayor rendimiento promedio que los demás, sin embargo, también es correcto recalcar que las aplicaciones en el sistema operativo de APPLE tienen un mayor peso que en el de XIAOMI, cosa que puede llegar a influir en el resultado.
+
+```{r}
+#| label: fig-2
+#| fig-cap: "Grafica de efectos"
+plot.design(`Tiempo descarga` ~  Dispositivos,data =Datos, col="blue", xlab="Efecto", ylab="Tiempo promedio descarga")
+
+```
+
+## Análisis de resultados númericos
+
+Debido a que el valor p del anova dió 0.0915, es decir, mayor al nivel de significancia, estadísticamente sería posible decir que no hay razones para rechazar la hipótesis nula, es decir, no se puede concluir que haya una diferencia realmente significativa en los tiempos de descarga en cada uno de los dispositivos estudiados; el valor F es 3.156, esto indica que la variación entre los dispositivos es 3.156 veces mayor que la variación residual, pero como el valor p es mayor que 0.05, esta diferencia no es estadísticamente significativa. Como en este caso los datos arrojaron que no hay diferencias significativas entre los tiempos de descarga pero el valor p fue cercano al nivel de significancia, se decidió tomar en cuenta que podría ser prudente realizar más análisis con otras pruebas como las figuras 1 y 2 y así sacar conclusiones aún más profundas.
+
+```{r}
+modelo <- aov(`Tiempo descarga` ~ Dispositivos, data = Datos)
+summary(modelo)
+```
+
+# Conclusiones
+
+Hablando de rendimiento, los dispositivos APPLE(IPhone 11) y XIAOMI (Redmi Note 13) muestran un mejor desempeño en cuanto a tiempos de descarga de aplicaciones en comparación con el dispositivo SAMSUNG (A70), el cual muestra un rendimiento inferior. En particular, la mediana y los cuantiles de XIAOMI son menores, lo que indica que este dispositivo tiende a mantener tiempos de descarga más bajos.
+
+Es importante tener en cuenta que la diferencia de peso de las aplicaciones entre los sistemas operativos (iOS y Android) puede influir en los tiempos de descarga observados, factores como la antigüedad y el hardware de los dispositivos, que no se controlaron en este experimento, podrían haber influido en los resultados y deben considerarse en futuros estudios.
+
+El análisis de varianza (ANOVA) arrojó un valor p de 0.0915, que es mayor al nivel de significancia, lo que implica que no hay evidencia suficiente para rechazar la hipótesis nula de que no hay diferencias significativas en los tiempos de descarga entre los dispositivos y auunque el valor F de 3.156 sugiere que la variación entre los dispositivos es mayor que la variación residual, la diferencia no es estadísticamente significativa, sin embargo, como el valor p está cerca del umbral de significancia, se debe considerar la posibilidad de realizar estudios adicionales con más muestras para aumentar la potencia estadística y evaluar mejor si realmente existen diferencias significativas.
+
+A pesar de que los resultados no fueron estadísticamente significativos, en el análisis se sugiere que el dispositivo XIAOMI (Redmi Note 13) puede ser una opción recomendable para descargar aplicaciones de manera más eficiente i se compara con los dispositivos APPLE (iPhone 11) y SAMSUNG (A70).
